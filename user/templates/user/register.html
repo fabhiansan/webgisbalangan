@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block heading %}
+<style>
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+</style>
+
+{% endblock heading %}
+
+
+{% block content %}
+<form method="POST">
+{% csrf_token %}
+    <div class='col-4 mx-auto mt-4'>
+        {{ form|crispy }}
+        <button class="btn btn-info mt-3 mb-5" type='submit'>
+            Sign Up <span class="badge badge-primary"></span>
+    </button>
+    </div>
+</form>
+
+{% endblock content %}

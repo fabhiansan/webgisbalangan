@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  DMS Converter
+{% endblock title %}
+
+{% block heading%}
+
+<style>
+form {
+    text-align: center;
+}
+
+form input {
+    border-radius: 10px;
+}
+
+form .btn {
+    margin : 10px;
+}
+
+#result {
+    text-align: center;
+    display: none;
+}
+
+</style>
+<script>
+
+window.onload = function (){  
+    document.getElementById('btnconvert').addEventListener("click", function(){
+var str;   
+str = document.getElementById('dlat').value;
+str2 = document.getElementById('dlon').value;
+
+// [123 123 123]
+var array = str.split(" ");
+var deg = parseFloat(array[0]);
+var min = parseFloat(array[1]);
+var sec = parseFloat(array [2]);
+
+var degree = deg + min/60 + sec/3600;
+
+
+var array2 = str2.split(" ");
+var deg2 = parseFloat(array2[0]);
+var min2 = parseFloat(array2[1]);
+var sec2 = parseFloat(array2[2]);
+
+var degree = deg + min/60 + sec/3600;
+
+var degree2 = deg2 + min2/60 + sec2/3600;
+
+
+document.getElementById("lat").innerHTML = degree;
+document.getElementById("lon").innerHTML = degree2;
+document.getElementById('result').style.display = "block";
+
+})}
+</script>
+{% endblock heading%}
+
+
+
+{% block content %}
+<form>
+    <h3>Degree to DMS</h3>
+    <h5 style='margin-top: 30px'>Latitude</h5>
+    <i class="text-inactive" aria-hidden="true">pisahkan menggunakan spasi</i>
+</br>
+    <input type="text" name='dlat' id='dlat' required>
+    <h5 style='margin-top: 30px'>Longitude</h5>
+    <i class="text-inactive" aria-hidden="true">pisahkan menggunakan spasi</i>
+</br>
+    <input type="text" name='dlon' id='dlon' required>
+    </br>
+    <button class="btn btn-primary" type="button" id='btnconvert'>convert</button>
+</form>
+
+<div id='result'>   
+    <h5 class='textresult'> Latitude </h5>
+    <h6 id='lat'></h6>
+    <h5 class='textresult'> Longitude </h5>
+    <h6 id='lon'></h6>
+</div>
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<table class="table">
+    <thead>
+        {% for x in object_list %}
+        <th>{{ x.segmen }}</th>
+        {% endfor %}
+    </thead>
+    <tbody>
+    {% for x in object_list %}
+        <tr>
+            
+            <td>{{ x.undulating }}</td>
+            <td>{{x.porthole}}</td>
+            <td> {{x.mainroad}}</td>
+            <td> {{x.shoulder}}</td>
+            <td> {{x.drainage}}</td>
+            <td> {{x.bundwall}}</td>
+            <td>{{x.grade}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
+    

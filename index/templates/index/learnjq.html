@@ -1,0 +1,64 @@
+{% extends "index/layouts.html" %}
+
+{% block title %}
+  learn jq
+{% endblock title %}
+
+{% block body %}
+
+<ul id='geojsonf'>
+  <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque, modi. Assumenda, illum provident eum molestias aut ratione, aliquid facere vero reprehenderit officiis quo non ipsum atque maiores dolorum labore illo.</li>
+</ul>
+<script>
+
+console.log('this is learnjq.html');
+
+var $geojsonf = $('#geojsonf');
+
+$(function(){
+    $.ajax({
+      type: 'GET',
+      url: 'http://192.168.34.10:8080/geoserver/db_balangan/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=db_balangan%3Adata3d&maxFeatures=50&outputFormat=application%2Fjson',
+      crossDomain : true,
+      headers : {
+        'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE'
+      },
+      dataType: 'jsonp',      
+      beforeSend: function (request) {
+        request.setRequestHeader('Access-Control-Allow-Origin', '*');
+      },
+      success: function(geojsonfs) {
+        $.each(geojsonfs, function(i, geojsonf) {
+          $geojsonfs.append('<li>' + geojsonf.features + '</li>');
+        })
+      },
+      error: function(){
+        alert('json is not loaded')
+      }
+    })
+
+})
+
+/*
+var vector = new ol.Layer.Vector("My Layer");
+
+store = new GeoExt.data.FeatureStore({
+    layer: vector,
+    fields: [
+        {name: 'name', type: 'string'},
+        {name: 'description', type: 'string'}
+    ],
+    proxy: new GeoExt.data.ProtocolProxy({
+        protocol: new OpenLayers.Protocol.HTTP({
+            url: "http://192.168.34.10:8080/geoserver/db_balangan/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=db_balangan%3Adata3d&maxFeatures=50&outputFormat=application%2Fjson",
+            format: new OpenLayers.Format.GeoJSON()
+        })
+    }),
+    autoLoad: true
+});
+*/
+// http://192.168.34.10:8080/geoserver/db_balangan/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=db_balangan%3Adata3d&maxFeatures=50&outputFormat=application%2Fjson
+</script>
+{% endblock body %}

@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form class="card card-sm">
+                <div class="card-body row no-gutters align-items-center">
+                    <!--end of col-->
+                    <div class="col">
+                        <input class="form-control form-control-lg form-control-borderless" name='search' type="search" placeholder="Cari menggunakan ID BOR">
+                    </div>
+                    <!--end of col-->
+                    <div class="col-auto">
+                        <button class="btn btn-lg btn-success" type="submit">Search</button>
+                    </div>
+                    <!--end of col-->
+                </div>
+            </form>
+        </div>
+        <!--end of col-->
+    </div>
+<table class="table table-bordered m-4 mr-4">
+  <thead>
+    <tr>
+      <th>ID BOR</th>
+      <th>Lithologi</th>
+      <th>Z</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for x in bors %}
+      <tr>
+        <td>{{ x.id_bor }}</td>
+        <td>{{ x.lithologi }}</td>
+        <td>{{ x.z }}</td>
+        <td>{{ x.seam }}</td>
+        <td>{{ x.depth }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if bors.has_other_pages %}
+  <ul class="pagination">
+    {% if bors.has_previous %}
+      <li><a href="?page={{ bors.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in bors.paginator.page_range %}
+      {% if bors.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if bors.has_next %}
+      <li><a href="?page={{ bors.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

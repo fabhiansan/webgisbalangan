@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<table class="table">
+    <thead>
+        {% for x in object_list %}
+        <th>{{ x.nama }}</th>
+        {% endfor %}
+    </thead>
+    <tbody>
+    {% for x in object_list %}
+        <tr>
+            <td>{{ x.luas }}</td>
+            <td>{{ x.tanaman_utama }}</td>
+            <td> {{x.status }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
+    

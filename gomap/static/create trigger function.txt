@@ -1,0 +1,3 @@
+create index idx_gomap_areascm_geom on public.gomap_areascm using gist(shape);
+
+create index idx_reklamasi_geom on postgres.reklamasi using gist(shape);

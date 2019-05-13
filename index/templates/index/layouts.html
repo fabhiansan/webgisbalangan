@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="shortcut icon" href="{% static 'logo.png' %}" type="image/png">
+        <title>{% block title %}       
+        {% endblock title %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <script src='{% static "js/bootstrap.js" %}'></script>
+        <link rel='stylesheet' href='{% static "css/bootstrap.css" %}'></script>
+        <link rel='stylesheet' href='{% static "css/style.css" %}'>
+        <script src='{% static "js/main.js" %}'></script>
+        <script src='{% static "js/jquery.min.js" %}'></script>
+        <link rel='stylesheet' href='{% static "css/ol.css" %}'>
+        <script src='{% static "js/ol.js" %}'></script>
+    
+        {% block heading %}
+        {% endblock heading %}
+        <style>
+        .jumbotron {
+            height: 150px;
+            color: rgb(241, 237, 229); 
+            padding-top: 10px 
+        }
+        </style>
+
+        {% block script %}
+        {% endblock script %}
+    </head>
+    <body>
+        <a href='/'>
+            <div class="jumbotron text-center">
+                <img src='{% static "logo.png" %}'>
+                <h2>WEBGIS Balangan Coal</h2>
+            </div>
+        </a>
+    {% block body %}
+
+    {% endblock body %}
+
+    </body>
+</html>

@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(157, 168, 189);
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+}
+
+.jumbotron {
+    background-color: #34495e;
+}
+
+.jumbotron h1 {
+    color: aliceblue;
+
+    display: none;
+}
+
+.jumbotron img {
+    height: 50px;
+    width: 50px;
+}
+
+ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: right;
+}
+
+
+li
+{
+background-repeat: no-repeat;
+background-position: 100% .4em;
+padding-right: .6em;
+}

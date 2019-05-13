@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    <table>
+        <tr>
+            {% for x in form.segmen %}
+                <th>
+                {{ form }}
+                </th>
+            {% endfor %}
+        </tr>
+    </table>
+    <input type="submit" value="Save">
+</form>
+{% endblock content %}
+    

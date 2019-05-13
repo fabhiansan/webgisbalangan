@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  DMS Converter
+{% endblock title %}
+
+{% block heading%}
+<style>
+form {
+    text-align: center;
+}
+
+form input {
+    border-radius: 10px;
+}
+
+form .btn {
+    margin : 10px;
+}
+
+#result {
+    text-align: center;
+    display: none;
+}
+
+</style>
+
+
+
+<script>
+    var dms;
+    var degree;
+    var minute;
+    var sec;
+    var result;
+
+    var degree2;
+    var minute2;
+    var sec2;
+    var result2;
+    function convertlat() {
+       var lat = parseFloat(document.getElementById('dlat').value);
+       degree = Math.floor(lat);
+       deg = lat - degree;
+       min = deg * 60;
+       minute = Math.floor(min);
+       sec = min - minute;
+       second = sec * 60;
+       result = degree + '  ' + minute + "  " + second + "  ";   
+    };
+    
+    function convertlon() {
+       var lon = parseFloat(document.getElementById('dlon').value);
+       degree2 = Math.floor(lon);
+       deg2 = lon - degree2;
+       min2 = deg2 * 60;
+       minute2 = Math.floor(min2);
+       sec2 = min2 - minute2;
+       seccond2 = sec2 * 60;
+       result2 = degree2 + '  ' + minute2 + "  " + seccond2 + "  ";     
+    };
+window.onload = function (){
+    document.getElementById('btnconvert').addEventListener("click", function(){
+        convertlat();
+        document.getElementById("lat").innerHTML = result;
+        convertlon();
+        document.getElementById('lon').innerHTML = result2;
+        document.getElementById('result').style.display = "block";
+    })
+};
+    
+
+</script>
+{% endblock heading %}
+
+
+
+{% block content %}
+<div class='container' style='margin-top: 250px'>
+    <form class='align-content-center' >
+        <h3>Degree to DMS</h3>
+        <h5>Latitude</h5>
+        <input type="number" name='dlat' id='dlat' required>
+        <h5>Longitude</h5>
+        <input type="number" name='dlon' id='dlon' required>
+    </br>
+        <button class="btn btn-primary" type="button" id='btnconvert'>convert</button>
+    </form>
+
+    <div id='result'>   
+        <h5 class='textresult'> Latitude </h5>
+        <h6 id='lat'></h6>
+        <h5 class='textresult'> Longitude </h5>
+        <h6 id='lon'></h6>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+    {% for x in reklamasi %}
+       <h3> {{ x }} dengan luasan {{ x.luas }} dan tanaman utama adalah {{ x.tanaman_utama }} dan status {{ x.status }}</h3>   
+    {% endfor %}
+
+    {% for x in rci %}
+       <ul> {{ x }} 
+        <li> undulating= {{ x.undulating }} </li>
+        <li> porthole = {{ x.porthole }} </li>
+        <li> mainroad = {{ x.mainroad }} </li>
+        <li> shoulder = {{ x.drainage }} </li>
+        <li> bundwall = {{ x.bundwall }} </li>
+        </ul>
+    {% endfor %}
+
+{% endblock content %}

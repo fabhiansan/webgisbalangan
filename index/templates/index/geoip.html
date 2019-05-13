@@ -1,0 +1,12 @@
+{% extends "index/layouts.html" %}
+
+{% block title %}
+  GEOIP
+{% endblock title %}
+
+{% block body %}
+    <h2>geo api</h2>
+    <p>
+        your IP is {{ ip }} and you are probably in {{ country }}
+    </p>
+{% endblock body %}

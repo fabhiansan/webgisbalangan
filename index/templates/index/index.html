@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  index page
+{% endblock title %}
+
+
+{% block heading%}
+
+<style>
+.container {
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+</style>
+{% endblock heading %}
+
+{% block content %}
+<div class=container>
+<h3> Peta </h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">            
+            <a href='/map/'>
+            <button class="btn btn-primary" type="button">Bor Hole</button>
+            </a>
+        </div>
+        
+        <div class="col-sm-3">
+            <a href='/jquery/'>
+                <button class="btn btn-primary" type="button">Hauling Road</button>
+            </a>
+        </div>
+        <div class="col-sm-3">
+            <a href='#'>
+            <button class="btn btn-primary" type="button">Reklamasi</button>
+            </a>
+        </div>
+    </div>
+</div>
+<h3> Aplikasi </h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">            
+            <a href='{% url "dmsconverter" %}'>
+                <button class="btn btn-primary" type="button">Degree to DMS </button>
+            </a>
+        </div>
+        <div class="col-sm-3">            
+                <a href='{% url "degreeconverter" %}'>
+                    <button class="btn btn-primary" type="button">DMS to Degree </button>
+                </a>
+            </div>
+    </div>
+</div>
+</div>
+
+{% endblock content %}

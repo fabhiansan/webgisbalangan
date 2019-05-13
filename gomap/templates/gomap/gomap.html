@@ -1,0 +1,303 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load leaflet_tags %}
+
+
+{% block title %}
+{% endblock title %}
+    
+{% block heading %}
+{% leaflet_css %}
+{% leaflet_js %}
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="{% static 'js/leaflet.ajax.js' %}"></script>
+<script src="{% static 'js/L.Control.MousePosition.js' %}"></script>
+<script src="{% static 'js/leaflet-search.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/leaflet-search.css' %}"/>
+<script src="{% static 'js/Leaflet.Control.Custom.js' %}"></script>
+<link rel='stylesheet' href="{% static 'css/L.Control.MousePosition.css' %}">
+<script src="{% static 'leaflet-groupedlayercontrol-gh-pages/leaflet.groupedlayercontrol.js' %}"></script>
+<link rel='stylesheet' href="{% static 'leaflet-groupedlayercontrol-gh-pages/leaflet.groupedlayercontrol.css' %}">
+<link rel='stylesheet' href="{% static 'L.Control.Sidebar.css' %}">
+<script src="{% static 'L.Control.Sidebar.js' %}"></script>
+<link rel="stylesheet" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css" />
+<script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
+<script src="{% static 'js/L.TileLayer.BetterWMS.js' %}" type='text/javascript'></script>
+<script src="{% static 'js/leaflet.wms.js' %}" type='text/javascript'></script>
+
+<style>
+#map {
+    height: 750px;
+    width: 100%;
+}
+
+</style>
+
+<script type="text/javascript">
+    function out_layer(map, option){
+
+
+        var url = 'http://192.168.34.10:8080/geoserver/db_balangan/wms?';
+        var betterwms = L.tileLayer.betterWms(url, {
+        layers: 'db_balangan:all_bor',
+        transparent: true,
+        format: 'image/png'
+      });
+
+
+        var x = 'http://192.168.34.10:8080/geoserver/db_balangan/wms?'
+
+        var ortho = L.tileLayer.wms('http://192.168.34.10:8080/geoserver/db_balangan/wms?', {
+            layers: 'db_balangan:reklamasi',
+            transparent: true,
+            format: 'image/png',
+            
+        })
+        ortho.addTo(map)            
+
+        var url = 'http://192.168.34.10:8080/geoserver/db_balangan/wms?'
+ 
+        var datasets = new L.GeoJSON.AJAX("{% url 'reklamasi' %}",{
+
+            onEachFeature: function(feature, layer){
+                layer.bindPopup("<b>ID : </b>"+feature.properties.name.toString());
+                layer.setStyle({color: 'Navy',
+              opacity: 0.5})
+              }
+        });
+        datasets.addTo(map)
+
+        var hauling = new L.GeoJSON.AJAX("{% url 'rci' %}",{
+            onEachFeature: function(feature, layer){
+                layer.bindPopup("<b>ID : </b>"+feature.properties.segmen.toString()
+                                +'</br><b>RCI : </b>'+feature.properties.rci.toString());
+                
+                if(layer.feature.properties.rci >= 3) {    
+                  layer.setStyle({color :'green'}) 
+            }
+                else {
+                  layer.setStyle({color:'yellow'})
+                }
+            }
+        });
+        hauling.addTo(map)
+
+
+        var basemaps = {
+            Grayscale: L.tileLayer('https://{s}.tiles.mapbox.com/v3/{key}/{z}/{x}/{y}.png', 
+            {
+                key: 'lrqdo.me2bng9n',
+                maxZoom: 18,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }),
+            Streets: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }),
+            Mapbox: L.tileLayer("http://a.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }),
+
+            OpenTopoMap : L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+            })
+
+            };
+    
+            var groupedOverlays = {
+            "Layers": {
+                "Rekalamasi": datasets,
+                "Borehole": betterwms,
+                "Orthophoto": ortho,
+                "Hauling Road": hauling
+                },
+            };
+            
+          
+            L.control.groupedLayers(basemaps, groupedOverlays, 
+            {
+                position : 'topright'
+            }
+            ).addTo(map);
+
+
+            var options = {
+            position: 'topright',         // Leaflet control position option
+            circleMarker: {               // Leaflet circle marker options for points used in this plugin
+                color: 'red',
+                radius: 2
+            },
+            lineStyle: {                  // Leaflet polyline options for lines used in this plugin
+                color: 'red',
+                dashArray: '1,6'
+            },
+            lengthUnit: {                 // You can use custom length units. Default unit is kilometers.
+                display: 'km',              // This is the display value will be shown on the screen. Example: 'meters'
+                decimal: 2,                 // Distance result will be fixed to this value. 
+                factor: null,               // This value will be used to convert from kilometers. Example: 1000 (from kilometers to meters)  
+                label: 'Distance:'           
+            },
+            angleUnit: {
+                display: '&deg;',           // This is the display value will be shown on the screen. Example: 'Gradian'
+                decimal: 2,                 // Bearing result will be fixed to this value.
+                factor: null,                // This option is required to customize angle unit. Specify solid angle value for angle unit. Example: 400 (for gradian).
+                label: 'Bearing:'
+            }
+            };
+            
+            L.control.polylineMeasure(options).addTo(map);
+    
+    
+            L.control.mousePosition().addTo(map);   
+    
+        var sidebar = L.control.sidebar('sidebar', {
+            position: 'left'
+        });
+        
+        map.addControl(sidebar);
+    
+//            sidebar.setContent("<b>test</b>This map shows the relative position of our plantation area. If there is any noticeable difference in the location, boundary, shape, and size of the land area, please kindly contact us for verification. Every effort is made to ensure this map is free of errors but there is no warrant the map or its features are either spatially accurate or fit for a particular use. This map is provided without any warranty of any kind whatsoever either expressed or implied. Maps and information contained on this website may not be disseminated in other formats in either digital or printed files. Access to this map is only allowed from our website. The user acknowledges and accepts all inherent limitations of the maps and data, including the fact that the maps and data are dynamic and in a constant state of maintenance, correction and revision. We are not responsible for any form of misuse of information taken from our website.");
+        setTimeout(function () {
+            sidebar.show();
+        }, 500);
+
+        map.on('click', function () {
+            sidebar.hide();
+        })
+    
+
+
+        L.control.custom({
+            position: 'bottomright',
+            content : '<button type="button" class="btn btn-default">'+
+                        '    <i class="fa fa-crosshairs"></i>'+
+                        '</button>',
+                        
+            classes : 'btn-group-vertical btn-group-sm',
+            style   :
+            {
+                margin: '10px',
+                padding: '0px',
+                cursor: 'pointer',
+            },
+            datas   :
+            {
+                'foo': 'bar',
+            },
+            events:
+            {
+                click: function(data)
+                {   
+                    sidebar.show();
+                    map.setView([-2.3, 115.55]) 
+                }
+            }
+        })
+        .addTo(map);
+
+        L.control.custom({
+            position: 'bottomright',
+            content : '<button type="button" class="btn btn-info">'+
+                        '<i class="fa fa-compass"></i>'+
+                        '</button>',
+                        
+            classes : 'btn-group-vertical btn-group-sm',
+            style   :
+            {
+                margin: '10px',
+                padding: '0px',
+                cursor: 'pointer',
+            },
+            datas   :
+            {
+                'foo': 'bar',
+            },
+            events:
+            {   
+                click: function(data)
+                {   
+                    map.once('click', function(e){
+                        var marker = new L.marker(
+                            e.latlng,   {
+                                draggable: true
+                        }).addTo(map)
+                        .on('dragend', function(){
+                            var coord = String(marker.getLatLng()).split(',');
+                            console.log(coord);
+                            var lat = coord[0].split('(');
+                            console.log("lat :" + lat[1]);
+                            var lng = coord[1].split(')');
+                            console.log("lon : " + lng[0]);
+                            marker.bindPopup('Coordinates: (' + lat[1] + "," + lng[0] + ')');
+                            })
+                        })
+                    },
+                dbclick: function(data)
+                {
+                    map.off('click', function(e){
+                        var marker = new L.marker(
+                            e.latlng,
+                            {
+                                draggable: true
+                            })
+                    });
+                    map.removeLayer(marker) 
+                    }
+                
+            }
+        })
+        .addTo(map);
+
+        datasets.on('mouseover', function() {
+            this.setStyle({
+                color: 'red'   //or whatever style you wish to use;
+            });
+        });
+
+        datasets.on('mouseout', function() {
+            this.setStyle({
+                color: 'navy'
+            })
+        });
+    }       
+</script>
+
+{% endblock heading %}
+{% block content %}
+  
+
+        <h1>Peta Tambang</h1>
+    
+        {% leaflet_map 'map' callback='out_layer'%}
+    
+    
+    <div id="sidebar">
+        <div class='container'>
+            <div class='row'>
+                <h1 class='col-12' style='text-align: center'>Balangan Coal</h1>
+                <div class='col-12 mt-2' style='text-align: center'>
+                    <img src='{% static "img/logo.png" %}' style="height: 100px; width: 100px;">
+                </div>
+                <div class='col'>
+                    <h6 style='text-align: justify' class='mt-4'>
+                <b>Welcome to Balangancoal's WEBGIS</b> <br>
+                This map shows the relative position of our pit area.
+                If there is any noticeable difference in the location, boundary, shape, and size of the land area, please kindly contact us for verification.<br><br>
+                Every effort is made to ensure this map is free of errors but there is no warrant the map or its features are either spatially accurate or fit for a particular use.<br>
+                This map is provided without any warranty of any kind whatsoever either expressed or implied.<br>
+                Maps and information contained on this website may not be disseminated in other formats in either digital or printed files.<br>
+                
+                The user acknowledges and accepts all inherent limitations of the maps and data,
+                including the fact that the maps and data are dynamic and in a constant state of maintenance, correction and revision.<br>
+                We are not responsible for any form of misuse of information taken from our website.
+                </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <i class="fa fa-align-center" aria-hidden="true"></i>
+{% endblock content %}

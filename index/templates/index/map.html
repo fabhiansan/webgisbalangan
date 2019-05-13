@@ -1,0 +1,175 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 400px;
+        width: 200px;
+      }
+    </style>
+    <title>OpenLayers example</title>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <link href="{% static 'css/ol.css' %}">
+    <script src="{% static 'js/ol.js' %}"></script>
+  </head>
+  <body>
+    <h2>My Map</h2>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+      
+      
+      
+  var view = new ol.View({
+    center: [344241.5416, 9739665.132],
+      zoom: 1
+  });
+
+  var map = new ol.Map({
+      layers: [
+          new ol.layer.Tile({
+              source: new ol.source.OSM()
+          }),
+//          layer_test
+      ],
+      target: 'map',
+      view: view
+  });
+      
+      var jsons = [];
+      var marker;
+      var vectorSource;
+      var markerVectorLayer;
+      function CrtLayer(plon, plat){
+          console.log('crtLay'+ plat + ',' + plon);
+          marker = new ol.Feature({
+          geometry: new ol.geom.Point(
+            ol.proj.fromLonLat([plat,plon])
+          ),  // Cordinates of New York's Town Hall
+          
+          });
+          
+          vectorSource = new ol.source.Vector({
+            features: [marker]
+          });
+          console.log('vectorSource' + plat + ',' + plon);
+          markerVectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+          });
+          console.log('markerVL' + plat + ',' + plon);
+          map.addLayer(markerVectorLayer);
+          console.log('addlayer'+ plat + ',' + plon)
+      }
+/*        
+      function getapi() {
+        $.ajax({
+            type: 'GET',
+            url:'/api/reklamasi/',
+            success: function(datas){
+                console.log('success', datas);
+                $.each(datas, function(i, json){
+                  //console.log(json.lat + ', '+ json.lon)
+                  CrtLayer(json.lon, json.lat);
+                })
+            
+            }
+        })
+    }
+    getapi();
+
+*/
+    function getgeoserver(){
+      $.ajax({
+
+        type:'GET',
+        url:'192.168.34.10:8080/geoserver/db_balangan/ows',
+        data : {
+          service: 'WFS',
+          VERSION : '1.1.0',
+          request : 'GetFeature',
+          typename : 'db_balangan:wwm_reklamasi',
+          srsname : 'EPSG:32750',
+          //bbox: extent.join(',')+',EPSG:32750',
+          success: function (datas) {
+          console.log('sucess', datas)
+        }
+        }})};
+
+getgeoserver();
+/*        
+        params : {
+          'LAYERS' : 'db_balangan:wwm_reklamasi',
+          'VERSION' : '1.1.0',
+          'FORMAT': 'application/json',
+          'TILED' : true,
+        },
+        serverType: 'geoserver',
+        success: function success(datas) {
+          console.log('sucess', datas)
+        }
+      })
+
+    }
+
+  
+
+http://192.168.34.10:8080/geoserver/db_balangan/ows?
+
+var marker = new ol.Feature({
+      geometry: new ol.geom.Point(
+        ol.proj.fromLonLat([-74.006,40.7127])
+      ),  
+    });
+
+    var vectorSource = new ol.source.Vector({
+      features: [marker]
+    });
+
+    var markerVectorLayer = new ol.layer.Vector({
+      source: vectorSource,
+    });
+    
+
+    var Source_test = new ol.source.TileWMS({
+          url : 'http://localhost:5431/geoserver/cite/wms?',
+          params: {
+              'LAYERS': 'cite:Bor_LSA',
+              'VERSION': '1.1.0',
+              'FORMAT': 'image/png',
+              'TILED': true 
+          },
+          serverType : 'geoserver'
+      });
+
+      var layer_test = new ol.layer.Tile({
+        source: Source_test
+    });
+*/
+
+map.on('singleclick', function(evt) {
+        document.getElementById('info').innerHTML = '';
+        var viewResolution = /** @type {number} */ (view.getResolution());
+        var url = wmsSource.getGetFeatureInfoUrl(
+          evt.coordinate, viewResolution, 'EPSG:4326',
+          {'INFO_FORMAT': 'text/html'});
+        if (url) {
+          document.getElementById('info').innerHTML =
+              '<iframe seamless src="' + url + '"></iframe>';
+        }
+      });
+      map.on('pointermove', function(evt) {
+        if (evt.dragging) {
+          return;
+        }
+        var pixel = map.getEventPixel(evt.originalEvent);
+        var hit = map.forEachLayerAtPixel(pixel, function() {
+          return true;
+        });
+        map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+      });
+
+    
+    </script>
+  </body>
+</html>
